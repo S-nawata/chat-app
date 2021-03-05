@@ -65,12 +65,12 @@ const Signup = () => {
             variant="outlined"
          />
         <TextField 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             type="password"
             fullWidth 
             label="パスワード" 
             variant="filled"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
         />
         <TextField
             value={username}
