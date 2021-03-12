@@ -9,23 +9,23 @@ import  LoggedInRoute from "./components/LoggedInRoute";
 
 const App = () => {
     return (
-    <AuthProvider>
-        <BrowserRouter>
-            <Switch> 
-                <Route exact path= "/login">
-                    <Login />   
-                </Route>
-                <Route exact path = "/signup">
-                    <Signup />
-                </Route>
-                <Route exact path= "/">
-                    <LoggedInRoute>
-                        <Room />
-                    </LoggedInRoute>
-                </Route>
-            </Switch>
-        </BrowserRouter>
-    </AuthProvider>
+        <AuthProvider>
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path="/login">
+                        <Login />
+                    </Route>
+                    <Route exact path="/signup">
+                        <Signup />
+                    </Route>
+                    <Route exact path="/">
+                        <LoggedInRoute>
+                            <Room />
+                        </LoggedInRoute>
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </AuthProvider>
     );
 };
 export default App;

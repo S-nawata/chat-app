@@ -1,13 +1,23 @@
-import { useContext} from "react";
+import { useContext, useEffect, useState} from "react";
 import { Button } from "@material-ui/core";
-import { auth } from "../firebase/cofig"
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import firebase,　{ auth, db } from "../firebase/cofig";
 import { AuthContext } from "../context/AuthContext";
+import  Form  from "../components/Form";
+import List from "../components/List";
+
+const useStyles = makeStyles({
+    root: {
+        backgroundColor : "#EEE"
+    },
+});
 
 const Room = () => {
+    const classes = useStyles();
     const history = useHistory();
-    const value = useContext(AuthContext);
-    console.log(value)
+    const userState = useContext(AuthContext);
+    const [messages, setMessages] = useState([]);
     const logout = () => {
         auth
         .signOut()
@@ -20,13 +30,44 @@ const Room = () => {
         });
     };
 
+    const addChat = (text) => {
+        db.collection("messages")
+        .add({
+            content: text,
+            username: userState.user.displayName,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+            console.log("送信成功")
+        })
+        .catch((e) => {
+            console.log("送信失敗", e)
+        })
+    }
+
+    useEffect(() => {
+        db.collection("messages")
+        .orderBy("createdAt")
+        .onSnapshot((querySnapshot) => {
+            const data = querySnapshot.docs.map((doc) => {
+                return {
+                    ...doc.data(),
+                    id: doc.id,
+                };
+        });
+        setMessages(data);
+        });
+    },[])
+
     return (
-        <>
-        <h1>Room</h1>
+        <div className={classes.root}>
+        <h1>チャットルーム</h1>
+        <Form addChat={addChat} />
+        <List messages={messages} />
         <Button variant="contained" onClick={logout}>
             ログアウト
         </Button>
-        </>
+        </div>
     );
 };
 
